@@ -1,0 +1,6 @@
+name = Numbers in Words
+description = Module that takes a number and returns the number in words.
+package = Epicodus Examples
+core = 7.x
+files[] = numberwords.module
+files[] = numberwords.test

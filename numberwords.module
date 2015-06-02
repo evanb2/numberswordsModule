@@ -1,0 +1,48 @@
+<?php
+
+function numberwords_menu() {
+    $items['numbers'] = array(
+        'title' => 'Numbers to Words',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('numberwords_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['words'] = array(
+        'title' => 'Success!!!!!!',
+        'page callback' => 'numberwords_form_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function numberwords_form() {
+    $form['number'] = array(
+        '#title' => 'Enter a number',
+        '#type' => 'textfield',
+        '#placeholder' => 'ex: 55',
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Enter',
+    );
+    return $form;
+}
+
+function numbers_to_words($number) {
+
+    
+
+}
+
+function numberwords_form_submit($form, &$form_state) {
+    $_SESSION['output'] = numbers_to_words($form_state['values']['number']);
+
+    $form_state['redirect'] = 'words';
+}
+
+function numberwords_form_success() {
+    return $_SESSION['output'];
+}
