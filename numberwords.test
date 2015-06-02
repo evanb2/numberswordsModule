@@ -1,0 +1,30 @@
+<?php
+
+class NumberWordsTestCase extends DrupalUnitTestCase {
+    public static function getInfo() {
+        return array(
+            'name' => 'Number Words Unit Test',
+            'description' => 'Test that Tom\'s logic is flawless',
+            'group' => 'Examples',
+        );
+    }
+
+    function testNumberWords() {
+        $input = '1';
+        $result = numbers_to_words($input);
+        $message = 'An input of 1 should return "one"';
+        $this->assertEqual($result, 'one');
+
+        $input = '20';
+        $result = numbers_to_words($input);
+        $message = 'An input of 20 should return "twenty"';
+        $this->assertEqual($result, 'twenty');
+
+        $input = '20000';
+        $result = numbers_to_words($input);
+        $message = 'An input of 20000 should return "twenty thousand"';
+        $this->assertEqual($result, 'twenty thousand');
+    }
+}
+
+?>

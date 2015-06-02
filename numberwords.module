@@ -1,7 +1,7 @@
 <?php
 
 function numberwords_menu() {
-    $items['numbers'] = array(
+    $items['numberwords'] = array(
         'title' => 'Numbers to Words',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('numberwords_form'),
@@ -21,7 +21,7 @@ function numberwords_form() {
     $form['number'] = array(
         '#title' => 'Enter a number',
         '#type' => 'textfield',
-        '#placeholder' => 'ex: 55',
+
         '#required' => TRUE,
     );
     $form['submit'] = array(
@@ -33,16 +33,83 @@ function numberwords_form() {
 
 function numbers_to_words($number) {
 
-    
+    $ones = [1 => "one", 2 => "two", 3 => "three", 4 => "four", 5 => "five", 6 => "six", 7 => "seven", 8 => "eight", 9 => "nine"];
+    $teens = [10 => "ten", 11 => "eleven", 12 => "twelve", 13 => "thirteen", 14 => "fourteen", 15 => "fifteen", 16 => "sixteen", 17 => "seventeen", 18 => "eighteen", 19 => "nineteen"];
+    $tens = [2 => "twenty", 3 => "thirty", 4 => "forty", 5 => "fifty", 6 => "sixty", 7 => "seventy", 8 => "eighty", 9 => "ninety"];
 
+    $words = "";
+    // drupal_set_message(gettype($words));
+
+    $number = (int)$number;
+
+    while ($number > 0) {
+        if (strlen($words) > 0) {
+            $words .= " ";
+        }
+
+        if ($number < 10) {
+          $words .= $ones[$number];
+          $number = 0;
+        }
+         else if ($number < 20) {
+          $words .= $teens[$number];
+          $number = 0;
+        } else if ($number < 100) {
+          $words .= $tens[($number / 10)];
+          $number %= 10;
+        } else if ($number < 1000) {
+          $words .= $ones[($number / 100)] . " hundred";
+          $number %= 100;
+        } else if ($number < 10000) {
+          $words .= $ones[($number / 1000)] . " thousand";
+          $number %= 1000;
+        } else if ($number < 20000) {
+          $words .= $teens[($number / 1000)] . " thousand";
+          $number %= 1000;
+        } else if ($number < 100000) {
+          $words .= $tens[($number / 10000)];
+          $number %= 10000;
+          $words = testThousand($words, $number);
+        } else if ($number < 1000000) {
+          $words .= $ones[($number / 100000)] . " hundred";
+          $number %= 100000;
+          $words = testThousand($words, $number);
+        } else if ($number < 10000000) {
+          $words .= $ones[($number / 1000000)] . " million";
+          $number %= 1000000;
+        } else if ($number < 20000000) {
+          $words .= $teens[($number / 1000000)] . " million";
+          $number %= 1000000;
+        } else if ($number < 100000000) {
+          $words .= $tens[($number / 10000000)];
+          $number %= 10000000;
+          $words = testMillion($words, $number);
+        }
+    }
+    // dpm($words);
+    return $words;
 }
+
+function testThousand($words, $number) {
+  if ((int)($number/1000) === 0) {
+    $words .= " thousand";
+  }
+  return $words;
+}
+
+function testMillion($words, $number) {
+  if ((int)($number/1000000) === 0) {
+    $words .= " million";
+  }
+  return $words;
+}
+
 
 function numberwords_form_submit($form, &$form_state) {
     $_SESSION['output'] = numbers_to_words($form_state['values']['number']);
-
     $form_state['redirect'] = 'words';
 }
 
 function numberwords_form_success() {
-    return $_SESSION['output'];
+   return $_SESSION['output'];
 }
